@@ -17,6 +17,9 @@ public class RemoveSpaces {
 
             while ((line = reader.readLine()) != null) {
                 content.append(line).append("\n");
+                System.out.println(content.toString());
+                System.out.println(content.toString());
+
             }
 
             reader.close();
