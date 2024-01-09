@@ -1,0 +1,717 @@
+----------------------------------------Билет №19 3-----------------------------------------------------------
+DOMAINS
+    integerList = integer*.
+
+PREDICATES
+    sum(integerList, integer).
+    count(integerList, integer).
+    average(integerList, real).
+    decreaseEach(integerList, real, integerList).
+    processList(integerList, integerList).
+
+CLAUSES
+    sum([], 0).
+    sum([H|T], TotalSum) :-
+        sum(T, Sum),
+        TotalSum = H + Sum.
+
+    count([], 0).
+    count([_|T], Count) :-
+        count(T, TempCount),
+        Count = TempCount + 1.
+
+    average(List, Avg) :-
+        sum(List, Sum),
+        count(List, Count),
+        Count > 0,
+        Avg = Sum / Count.
+
+    decreaseEach([], _, []).
+    decreaseEach([H|T], Value, [NewH|NewT]) :-
+        NewH = H - Value,
+        decreaseEach(T, Value, NewT).
+
+    processList(List, Result) :-
+        average(List, Avg),
+        decreaseEach(List, Avg, Result).
+
+GOAL
+    processList([1, 2, 3, 4, 5], Result).
+------------------------------------------Билет №5 2--------------------------------------------------------------------------------
+
+domains 
+list = string*
+predicates
+nondeterm list_word(list)
+%nondeterm check_w(string)
+nondeterm last_w(string, char)
+
+clauses
+%check_w(S) :- frontchar(S, _, Res),, write(C).
+
+last_w(Str, Q) :- frontchar(Str, X, Res), str_len(Res, P), P = 0, !, Q = X.
+last_w(Str, Q ) :- frontchar(Str, _, Res), last_w(Res, Q ).
+
+list_word([H| T]) :- frontchar(H, X, _),last_w(H, PP) ,  X<>PP,!,list_word(T).
+list_word([H|T]) :- write(H),nl, list_word(T).
+goal
+list_word(["msfdadf","fmsf", "asfshja"]).
+%check_w("1234").
+%last_w("dasdas", TT).
+
+-------------------------------------Билет №5 3 --------------------------------------------------------------------------------
+DOMAINS
+    intList = integer*.
+
+PREDICATES
+    nondeterm removeElement(intList, integer, intList).
+
+CLAUSES
+    removeElement([], _, []).
+    removeElement([H|T], Elem, R) :-
+        H = Elem,
+        removeElement(T, Elem, R).
+    removeElement([H|T], Elem, [H|R]) :-
+        H <> Elem,
+        removeElement(T, Elem, R).
+
+GOAL
+    X=[1, 2, 3, 4, 3, 2, 1],readint(Y),
+    removeElement(X, Y, Result),
+    write(Result), nl.
+------------------------------------Билет №2 3--------------------------------------------------------------------------------------
+
+DOMAINS
+    list = integer*.
+
+PREDICATES
+    move_last_to_first(list, list).
+
+CLAUSES
+    move_last_to_first([], []).
+    move_last_to_first([Last], [Last]).
+    move_last_to_first([H, Next|T], [Last, H|NewT]) :-
+        move_last_to_first([Next|T], [Last|NewT]).
+
+GOAL
+    X=[1, 2, 3, 4],
+    move_last_to_first(X, NewList).
+-----------------------------------------Билет №18 3---------------------------------------------------------------------------------
+
+DOMAINS
+    intList = integer*.
+
+PREDICATES
+   nondeterm removeTailFromElement(intList, integer, intList).
+
+CLAUSES
+   
+    removeTailFromElement([X|_], X, []).
+    removeTailFromElement([H|T], X, [H|NewT]) :-
+        removeTailFromElement(T, X, NewT).
+
+GOAL
+    X=[1, 2, 3, 4, 5, 3, 7],readint(Y),
+    removeTailFromElement(X, Y, Result).
+----------------------------------------------Билет №4 3----------------------------------------------------------------------------
+
+DOMAINS
+    intList = integer*.
+
+PREDICATES
+    nondeterm removeFirstOccurrence(intList, integer, intList).
+
+CLAUSES
+    removeFirstOccurrence([], _, []).
+    removeFirstOccurrence([Elem | Tail], Elem, Tail).
+    removeFirstOccurrence([Head | Tail], Elem, [Head | NewTail]) :-
+        Head <> Elem,
+        removeFirstOccurrence(Tail, Elem, NewTail).
+
+GOAL
+    X=[1, 2, 3, 2, 4],readint(Y),
+    removeFirstOccurrence(X, Y, NewList).
+---------------------------------------------------Билет №9 3---------------------------------------------------------------------
+
+DOMAINS
+    intList = integer*.
+
+PREDICATES
+    nondeterm createPalindrome(intList, intList).
+    nondeterm reverseList(intList, intList).
+    nondeterm appendList(intList, intList, intList).
+    nondeterm removeLast(intList, intList).
+
+CLAUSES
+    reverseList([], []).
+    reverseList([H | T], R) :-
+        reverseList(T, RevT),
+        appendList(RevT, [H], R).
+
+    appendList([], L, L).
+    appendList([H | T], L, [H | R]) :-
+        appendList(T, L, R).
+
+    createPalindrome(List, Palindrome) :-
+        reverseList(List, RevList),
+        appendList(List, RevList, TempPalindrome),
+        removeLast(TempPalindrome, Palindrome).
+
+    removeLast([], []).
+    removeLast([_], []).
+    removeLast([H | T], [H | NewT]) :-
+        removeLast(T, NewT).
+
+GOAL
+    createPalindrome([1, 2, 3], Palindrome),
+    write(Palindrome), nl.
+----------------------------------Заменит в списке элементы X на Y---------------------------------------------------------------
+
+
+domains 
+  list = integer*
+predicates
+    change_single_list_element(list, integer, integer, list)
+clauses
+    change_single_list_element([], _A, _B, []):-!.
+    change_single_list_element([A|Tail], A, B, [B|Tail]):-!.
+    change_single_list_element([Head|Tail], A, B, [Head|ChangedTail]):-
+      change_single_list_element(Tail, A, B, ChangedTail).
+goal
+    List=[1,2,3,4,5,1,2,4,5],readint(X),readint(Y),
+    change_single_list_element(List,X,Y,Result).
+---------------------------------/* переместить новый элемент с конца в начало списка */-----------------------------------
+
+domains
+  element_d = integer
+  list_d = element_d*
+  list = integer*
+predicates
+  last(list_d, element_d)
+  add_list ( integer, list, list )
+  clauses
+  last([X], X):-!.
+  last([_Head|Tail], Element):-
+  last(Tail, Element).
+  add_list (H,List,[H|List]).
+goal 
+  last([1,2,4], X), % -> 4
+  add_list(X,[1,2],L).
+  %last([1], X). -> 1
+  %last([], X). -> false
+  
+
+---------------------------------------------------------/* Добавление нового элемента */-----------------------------------
+
+domains
+list = integer*
+
+predicates
+add_list ( integer, list, list )
+
+clauses
+add_list (H,List,[H|List]).
+add_list(1,[2,3],L)
+
+---------------------------------------------------------/* Удаление одного элемента */---------------------------------
+
+domains
+list = integer*
+
+predicates
+erase_list (list,list)
+
+clauses
+erase_list ([H|T],T).
+erase_list([1,2,3],L)
+
+---------------------------------------------------------/* Поиск элемента */--------------------------------------------------
+domains
+digit_list=digit *
+digit=integer
+member_list=member *
+member=symbol
+
+predicates
+find(digit,digit_list)
+find(member,member_list)
+
+clauses
+/* Проверяем сходство с “головой” */ 
+find(H,[H|_]).
+/* Проверяем сходство с “головой” “хвоста” */
+find(H,[_|T]):-find(H,T).
+find(1,[1,2,3]); find(“a”,[“v”,”f”,”g”])
+*/
+
+---------------------------------------------------------/* Слияние двух списков */----------------------------------------------
+domains
+all_list=symbol *
+
+predicates
+append(all_list,all_list,all_list)
+
+clauses
+append([],L,L).
+append([N|L1],L2,[N|L3]):-append(L1,L2,L3).
+
+goal
+append([t,e],[s,t],L).
+append([],[s,t],L)
+*/
+
+---------------------------------------------------------Разделение списка на два подсписка--------------------------------------
+domains
+/* middle – пороговое значение */
+middle=symbol
+list=symbol *
+
+predicates
+split(middle,list,list,list)
+
+clauses
+/* Разделение на первый подсписок */
+split(Middle,[H|T],[H|L1],L2):-H<=Middle,split(Middle,T,L1,L2).
+/* Разделение на второй подсписок */
+split(Middle,[H|T],L1,[H|L2]):-split(Middle,T,L1,L2),H>Middle.
+split(_,[],[],[]).
+split(“c”,[“a”,”b”,”c”],L1,L2); split(“c”,[“a”,”b”,”d”],L1,L2)
+
+---------------------------------------------------------/* Сортировка списков */-------------------------------------------------
+domains
+number=integer
+list=number *
+
+predicates
+insert_sort(list,list)
+insert(number,list,list)
+asc_order(number,number)
+
+clauses
+insert_sort([],[]).
+insert_sort([X|T],Sorted_list):-insert_sort(T,Sorted_Tail),
+insert(X,Sorted_Tail,Sorted_list).
+
+/* Если X>Y сначала помещаем Y */
+insert(X,[Y|Sorted_list],[Y|Sorted_list1]):-
+order(X,Y), !,
+insert(X,Sorted_list,Sorted_list1).
+/* Если X<=Y помещаем X слева от Y */
+insert(X,Sorted_list,[X|Sorted_list]).
+
+order(X,Y):-X>Y.
+insert_sort(1,56,3,5,23,L)
+*/
+
+--------------------------------------------------------------------------------------------------------------------------
+domains
+number=integer
+predicates
+nondeterm write_number(number)
+clauses
+write_number(10).
+write_number(N):-N<10,write(N),nl,N1=N+1,write_number(N1).
+goal
+write("Эта числа:"),nl,write_number(1).
+----------------------считывает данные из файла, разделяет список на две части и записывает эти две части в отдельные выходные файлы------
+
+domains
+	file= datafile
+	list=string*
+predicates
+
+nondeterm result_1
+readfile(list)
+kol(integer,list)
+ff(integer,integer)
+zap(list)
+nondeterm append(list,list,list)
+nondeterm делит_лист(list,list,list)
+clauses
+readfile([]):-eof(datafile),!.
+    readfile([H|T]):-readln(H),readfile(T).
+kol(0,[]).
+	kol(N,[_|L]):-kol(N1,L),N=N1+1.
+ff(Q,U):-U=Q/2.
+
+zap([]):-!.
+        zap([H|T1]):-write(H),nl, zap(T1).
+
+append([],L,L).
+append([X|L1],L2,[X|L3]):-append(L1,L2,L3).
+
+ 
+	 
+делит_лист(L,L1,L2):-append(L1,L2,L),kol(N,L),N1=N div 2,kol(N1,L1).
+
+result_1:-
+	
+	F="D://manya-9.txt",
+	openread(datafile,F),
+	readdevice(datafile),
+	readfile(L),closefile(datafile),nl,
+	делит_лист(L,L1,L2),nl,
+	F1="D://1.txt",
+	openwrite(datafile,F1),
+            writedevice(datafile),  
+                zap(L1),
+                closefile(datafile),
+         F2="D://2.txt",
+	openwrite(datafile,F2),
+            writedevice(datafile),  
+                zap(L2),
+                closefile(datafile).
+
+	
+goal
+result_1.
+
+--------------------------------------------------------------------------------------------------------------------------
+Этот код на Prolog представляет собой программу, которая выполняет следующие действия:
+Считывает данные из двух файлов: "D://manya-9.txt" и "D://manya-10.txt", и сохраняет их в двух списках L и L1.
+Объединяет эти два списка в один список L2 с помощью предиката append/3.
+Записывает содержимое списка L2 в файл "D://m.txt".
+----------------------------------------------------------------------------------------------------------------------------
+domains
+	file= datafile
+	list=string*
+predicates
+
+nondeterm result_1
+readfile(list)
+kol(integer,list)
+ff(integer,integer)
+zap(list)
+append(list,list,list)
+
+clauses
+readfile([]):-eof(datafile),!.
+    readfile([H|T]):-readln(H),readfile(T).
+kol(0,[]).
+	kol(N,[_|L]):-kol(N1,L),N=N1+1.
+ff(Q,U):-U=Q/2.
+
+zap([]):-!.
+        zap([H|T1]):-write(H),nl, zap(T1).
+
+append([],L,L).
+append([X|L1],L2,[X|L3]):-append(L1,L2,L3).
+result_1:-
+	write("file name:"),nl,
+	F="D://manya-9.txt",
+	openread(datafile,F),
+	readdevice(datafile),
+	readfile(L),closefile(datafile),nl,
+	F1="D://manya-10.txt",
+	openread(datafile,F1),
+	readdevice(datafile),
+	readfile(L1),closefile(datafile),nl,
+	append(L,L1,L2),nl,
+	F2="D://m.txt",
+	openwrite(datafile,F2),
+            writedevice(datafile),  
+                zap(L2),
+                closefile(datafile).
+
+	
+goal
+result_1.
+
+----------------------------------------------------------------------------------------------------------------------
+domains
+    file=datafile1;datafile2;datafile3
+    list=string*
+predicates  
+    readfile(list)
+     nondeterm show(list,integer,real)
+    vyvod(list,real,list,list,integer)
+        zap(list)
+    nondeterm result
+clauses  
+        readfile([]):-eof(datafile1),!.
+    readfile([H|T]):-readln(H),readfile(T).   
+    show([],0,0).
+    show([H|L],S,D):-str_len(H,N),S1=S+N,show(L,S1,D).
+        show(_,S,D):-D=S/2.
+        vyvod([],_,[],[],_).
+  vyvod([H|L],D,[H],L,S):-str_len(H,K),S1=S+K,S1>D,!.
+  vyvod([H|L1],D,[H|T],M,S):-str_len(H,K),S1=S+K,S1<D,vyvod(L1,D,T,M,S1).
+        zap([]):-!.
+        zap([H|T1]):-write(H),nl, zap(T1).
+    result:-write("Vvedite imya faila\n"),
+                readln(FN), 
+                openread(datafile1,FN),
+                readdevice(datafile1),
+                readfile(L),
+                closefile(datafile1),
+                show(L,0,D),
+                vyvod(L,D,T,M,0),
+                write(L),
+                write("Vvedite imya faila dla zapisi 1: "),    
+        readln(FN2),
+        openwrite(datafile2,FN2),
+        writedevice(datafile2),  
+                zap(T),
+                closefile(datafile2),
+        write("Vvedite imya faila dla zapisi 2: "),    
+        readln(FN3),
+        openwrite(datafile3,FN3),
+            writedevice(datafile3),  
+                zap(M),
+                closefile(datafile3).       
+goal 
+        result.
+
+-----------------------------------------------------------------------------------------------------------------------
+Данный код на языке Prolog представляет собой программу, которая выполняет следующие действия:
+Читает строки из одного файла (datafile1) в список L.
+Вычисляет сумму длин строк в списке L и сохраняет ее в переменную D.
+Разбивает список L на два списка: T и M, так чтобы сумма длин строк в T была меньше или равна D/2, а в M больше D/2.
+Записывает содержимое списка T в один файл (datafile2) и список M в другой файл (datafile3).
+
+domains
+	file= datafile
+	list=string*
+predicates
+
+nondeterm result_1
+readfile(list)
+kol(integer,list)
+ff(integer,integer)
+zap(list)
+append(list,list,list)
+
+clauses
+readfile([]):-eof(datafile),!.
+    readfile([H|T]):-readln(H),readfile(T).
+kol(0,[]).
+	kol(N,[_|L]):-kol(N1,L),N=N1+1.
+ff(Q,U):-U=Q/2.
+
+zap([]):-!.
+        zap([H|T1]):-write(H),nl, zap(T1).
+
+append([],L,L).
+append([X|L1],L2,[X|L3]):-append(L1,L2,L3).
+result_1:-
+	write("file name:"),nl,
+	F="D://manya-9.txt",
+	openread(datafile,F),
+	readdevice(datafile),
+	readfile(L),closefile(datafile),nl,
+	F1="D://manya-10.txt",
+	openread(datafile,F1),
+	readdevice(datafile),
+	readfile(L1),closefile(datafile),nl,
+	append(L,L1,L2),nl,
+	F2="D://m.txt",
+	openwrite(datafile,F2),
+            writedevice(datafile),  
+                zap(L2),
+                closefile(datafile).
+
+	
+goal
+result_1.
+
+-------------------------------------------------------------------------------------------------------------------------
+Данный код на Prolog представляет собой программу, которая выполняет следующие действия:
+Читает строки из файла datafile1 и сохраняет их в список L.
+Вычисляет сумму длин строк в списке L и сохраняет ее в переменной D.
+Разбивает список L на два списка: T и M, так чтобы сумма длин строк в T была меньше или равна D/2, а в M больше D/2.
+Записывает содержимое списка T в файл datafile2 и список M в файл datafile3.
+Осуществляет ввод и вывод файлов с использованием стандартного ввода/вывода.
+---------------------------------------------------------------------------------------------------------------------------
+domains
+    file=datafile1;datafile2;datafile3
+    list=string*
+predicates  
+    readfile(list)
+     nondeterm show(list,integer,real)
+    vyvod(list,real,list,list,integer)
+        zap(list)
+    nondeterm result
+clauses  
+        readfile([]):-eof(datafile1),!.
+    readfile([H|T]):-readln(H),readfile(T).   
+    show([],0,0).
+    show([H|L],S,D):-str_len(H,N),S1=S+N,show(L,S1,D).
+        show(_,S,D):-D=S/2.
+        vyvod([],_,[],[],_).
+  vyvod([H|L],D,[H],L,S):-str_len(H,K),S1=S+K,S1>D,!.
+  vyvod([H|L1],D,[H|T],M,S):-str_len(H,K),S1=S+K,S1<D,vyvod(L1,D,T,M,S1).
+        zap([]):-!.
+        zap([H|T1]):-write(H),nl, zap(T1).
+    result:-write("Vvedite imya faila\n"),
+                readln(FN), 
+                openread(datafile1,FN),
+                readdevice(datafile1),
+                readfile(L),
+                closefile(datafile1),
+                show(L,0,D),
+                vyvod(L,D,T,M,0),
+                write(L),
+                write("Vvedite imya faila dla zapisi 1: "),    
+        readln(FN2),
+        openwrite(datafile2,FN2),
+        writedevice(datafile2),  
+                zap(T),
+                closefile(datafile2),
+        write("Vvedite imya faila dla zapisi 2: "),    
+        readln(FN3),
+        openwrite(datafile3,FN3),
+            writedevice(datafile3),  
+                zap(M),
+                closefile(datafile3).       
+goal 
+        result.
+--------------------------------------------------------------------------------------------------------------------------
+domains
+n=integer
+f=real
+
+predicates
+
+nondeterm factorial(n,f)
+	 e(n,f)
+clauses
+
+factorial(0,1).
+
+factorial(N,F):-N>0,
+		N1=N-1,
+		factorial(N1,F1),%F1=(N-1)!
+		F=F1*N. %N!=(N-1)!*N
+e(N,E):-N1=N-1,
+	e(N1,E1),
+	E=factorial(N,E1).
+-------------------------------------------------------------------------------------------------------------------------
+domains
+n=integer
+f=real
+
+predicates
+nondeterm factorial(n,f)
+nondeterm result
+
+clauses
+factorial(0,1).
+factorial(N,F):-N>0,N1=N-1, factorial(N1,F1),F=F1*N.
+
+result:-
+write("Введите число N"),nl,
+write("N="),readint(N),
+factorial(N,F),
+write(N,"!=",F),nl.
+
+goal
+result.
+--------------------------------------------------------------------------------------------------------------------------
+domains
+personalib = book(title,author,publication)
+publication = publics(publisher,year)
+collector,title,author,publisher = symbol
+year = integer
+
+
+predicates
+collection(collector,personalib)
+
+clauses
+collection("Иванов",book("Война и мир","Лев Толстой",publics("Просвещение",1990))).
+
+goal
+collection(C,book(T,A,publics(P,Y))).
+--------------------------------------------------------------------------------------------------------------------------
+Данный код на Prolog работает с символьными строками и выполняет следующие действия:
+elem(list,char,list): Этот предикат используется для извлечения первого символа из списка и возврата оставшегося списка.
+strTolist(string,list): Этот предикат конвертирует строку в список символов.
+search(list): Этот предикат выполняет поиск повторяющихся символов в списке и выводит их на экран.
+listTostr(list,string): Этот предикат конвертирует список символов обратно в строку.
+
+domains
+    list=char*
+predicates
+    nondeterm elem(list,char,list)
+    nondeterm strTolist(string,list)
+    nondeterm search(list)
+    nondeterm result
+    nondeterm listTostr(list,string)
+  
+clauses
+    elem([H|T],H,T).
+
+    %strTolist("",[]).
+    %strTolist(S,[H|T]):-frontchar(S,H,S1),strTolist(S1,T).
+
+    %search(L):-elem(L,H,T),elem(T,H1,T1),H=H1,write("Имеется символ: ",H),search(T1).
+    
+    search(S):-frontchar(S,H,STail),frontchar(STail,H,_),!,
+    write("Имеется символ: ",H),nl,search(STail).
+    search(S):-frontchar(S,_,STail),search(STail).
+    
+   % listTostr([],"").
+    %listTostr([H|T],Str):-listTostr(T,Str1),frontchar(Str,H,Str1).
+
+  strTolist("", []):-!.
+  strTolist(String, [Head|ListTail]):-
+    frontchar(String, Head, StringTail),
+    strTolist(StringTail, ListTail).
+  
+  listTostr([], ""):-!.
+  listTostr([Head|ListTail], String):-
+    listTostr(ListTail, StringTail),
+    frontchar(String, Head, StringTail).
+
+    %result:-write("Введите строку: "),readln(S),strTolist(S,L),search(L).
+    
+	result:-write("Введите строку: "),readln(S),strTolist(S,L),search(L).
+
+goal
+    result.
+    
+
+%goal
+ % strTolist("test string", List), 
+  %listTostr(List, String), 
+  %write(String).
+--------------------------------------------------------------------------------------------------------------------------
+domains
+    file=datafile
+    list=string*
+ 
+predicates
+    nondeterm read_file(list)
+    nondeterm func(list,integer)
+ 
+ 
+clauses
+    
+    read_file([]):- eof(datafile).
+    read_file([H|T]):-not (eof(datafile)),
+        readln(H),
+        read_file(T).   
+                
+    func([],0).
+    func([_|T],N1):-    %есть какойто элемент _ и остаток
+    func(T,N),  %передаём остаток
+    N1=N+1.     %а если он передался, то строка ещё есть и счётчик на +1
+    
+ 
+goal
+    write("Введите имя файла для просмотра: "),
+    readln(Filename),
+    closefile(datafile),
+    openread(datafile,Filename),
+    readdevice(datafile),
+    file_str(Filename,FileStr),
+    read_file(Str),
+    func(Str,N),
+    str_len(FileStr,Len),
+    Res=(Len-N+1)/N, %знаки переноса строки тоже считаются, поэтому вычитаем их количство (-N+1)
+    write("------------------------------------------------------------------------------"),nl,
+    write("Исходный текст: "),nl,
+    write(FileStr),nl,
+    write("------------------------------------------------------------------------------"),nl,
+    write("Ответ: ",Res),nl,nl,
+    write("------------------------------------------------------------------------------"),nl.
